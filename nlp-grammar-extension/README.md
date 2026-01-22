@@ -27,6 +27,47 @@ A Chrome Extension that detects basic grammar and spelling mistakes in text fiel
 - NLP rules analyze text
 - Errors are highlighted instantly
 
+## ⚠️ Implementation Note: Chrome Extension Module Limitation
+
+During development, an issue was encountered while structuring the extension code using ES module imports.
+
+**Issue**
+
+Initially, the content script attempted to import NLP logic using:
+
+import { detectErrors } from "./nlp.js";
+
+This resulted in the following runtime error:
+
+Uncaught SyntaxError: Cannot use import statement outside a module
+
+**Root Cause**
+
+In Chrome Extensions (Manifest v3), content scripts are not treated as ES modules by default. As a result, standard JavaScript import statements are not supported directly inside content scripts without additional bundling or configuration.
+
+**Resolution**
+
+To ensure maximum compatibility and simplicity:
+
+- The NLP rule-based logic was inlined directly into the content script
+- External module imports were removed
+- This avoided the need for bundlers or complex module loaders
+
+**Design Rationale**
+
+This approach:
+
+- Keeps the extension lightweight and dependency-free
+- Ensures consistent behavior across all supported websites
+- Aligns with Chrome Extension best practices for content scripts
+- Improves readability and ease of evaluation for reviewers
+
+## Demo
+A short demo video (2–3 minutes) is included showing:
+- Extension installation
+- Real-time grammar detection
+- Highlighted errors and suggestions
+
 ## Limitations
 - Rule-based (not ML-powered)
 - Limited grammar coverage
